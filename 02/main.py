@@ -4,6 +4,7 @@ from dataclasses import dataclass
 class Position:
     depth: int = 0
     horizontal: int = 0
+    aim: int = 0
 
 def main():
     with open("02/input.txt") as file:
@@ -21,10 +22,11 @@ def traverse_path(submarine_instructions):
 
         if instruction == "forward":
             position.horizontal += value
+            position.depth += position.aim * value
         elif instruction == "up": 
-            position.depth -= value
+            position.aim -= value
         elif instruction == "down":
-            position.depth += value
+            position.aim += value
         else:
             raise Exception("Not valid instruction: {instruction}")
     return position
