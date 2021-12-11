@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import numpy as np
 
 @dataclass
 class Point:
@@ -29,12 +30,17 @@ class Map:
     def add(self, line: Line):
         self.ensure_enough_space(line)
 
-        if line.p1.x == line.p2.x:
-            for y in range(line.min_p().y, line.max_p().y + 1):
-                self.increase(line.p1.x, y)
-        elif line.p1.y == line.p2.y:
-            for x in range(line.min_p().x, line.max_p().x + 1):
-                self.increase(x, line.p1.y)
+        p1 = np.array([line.p1.x, line.p1.y])
+        p2 = np.array([line.p2.x, line.p2.y])
+
+        delta = p2 - p1
+
+        length = max(abs(delta[0]), abs(delta[1]))
+        delta_unit = delta / length
+
+        for i in range(length+1):
+            p_to_increase = p1 + delta_unit * i
+            self.increase(int(p_to_increase[0]), int(p_to_increase[1]))
     
     def ensure_enough_space(self, line: Line):
         max_x = line.max_p().x
@@ -100,7 +106,7 @@ assert main_from_input("""
 3,4 -> 1,4
 0,0 -> 8,8
 5,5 -> 8,2
-""") == 5
+""") == 12
 
 if __name__ == "__main__":
     main()
