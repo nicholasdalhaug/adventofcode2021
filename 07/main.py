@@ -9,13 +9,14 @@ def main_from_input(content: str):
         n_fuel = new_n_fuel
 
         a += 1
-        new_n_fuel = sum([abs(x-a) for x in values])
+        new_n_fuel = sum([cost(abs(x-a)) for x in values])
 
     a -= 1
     print(n_fuel)
     return n_fuel
 
-
+def cost(abs_diff):
+    return (abs_diff + 1) * abs_diff / 2
 
 def main():
     with open("07/input.txt") as file:
@@ -25,7 +26,7 @@ def main():
 
 assert main_from_input("""
 16,1,2,0,4,2,7,1,2,14
-""") == 37
+""") == 168
 
 if __name__ == "__main__":
     main()
