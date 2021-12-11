@@ -54,27 +54,43 @@ def play_from_input(input_content: str):
     number_sequence = [int(x) for x in content_parts[0].strip().split(",")]
     boards = [BingoBoard(boards_str.strip().split("\n")) for boards_str in content_parts[1:]]
     
-    return play_bingo(boards, number_sequence)
+    score = play_bingo(boards, number_sequence)
+    print(score)
+    return score
 
 def play_bingo(boards:list[BingoBoard], number_sequence):
     step_i = 0
     board_that_has_bingo = None
 
-    while board_that_has_bingo is None:
+    while board_that_has_bingo is None and step_i < len(number_sequence):
         number = number_sequence[step_i]
 
         print(f"The number is {number}")
 
         for board in boards:
             board.mark_if_exists(number)
+        
+        indices_to_pop = []
+        for board_i in range(len(boards)):
+            board = boards[board_i]
             if board.has_bingo:
-                board_that_has_bingo = board
-                break
+                if len(boards) == 1:
+                    board_that_has_bingo = boards[0]
+                    break
+                indices_to_pop.append(board_i)
+        
+        for index_to_pop in sorted(indices_to_pop, reverse=True):
+            boards.pop(index_to_pop)
+        
+        
         
         step_i += 1
     
-    score = calc_board_score(board_that_has_bingo, number)
-    return score
+    if board_that_has_bingo is not None:
+        score = calc_board_score(board_that_has_bingo, number)
+        return score
+    else:
+        pass
 
 def calc_board_score(board: BingoBoard, winning_number: int) -> int:
     unmarked_sum = board.get_sum_of_unmarked_numbers()
@@ -85,8 +101,7 @@ def main():
     with open("04/input.txt") as file:
         content = file.read()
     
-    score = play_from_input(content)
-    print(score)
+    play_from_input(content)
 
 assert play_from_input("""
 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -108,7 +123,7 @@ assert play_from_input("""
 18  8 23 26 20
 22 11 13  6  5
  2  0 12  3  7
-""") == 4512
+""") == 1924
 
 if __name__ == "__main__":
     main()
