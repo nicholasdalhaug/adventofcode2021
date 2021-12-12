@@ -28,9 +28,18 @@ def get_paths_to_end(start_node: str, edges_dict: dict[str: list[str]], path_so_
     for to_node in can_go_to_nodes:
         if to_node == "end":
             paths.append(path_so_far + ("end", ))
+        elif to_node == "start": 
+            continue
         elif to_node.isupper() or to_node not in path_so_far:
             new_paths = get_paths_to_end(to_node, edges_dict, path_so_far)
             paths.extend(new_paths)
+        elif path_so_far.count(to_node) == 1:
+            duplicate_nodes = [node for node in path_so_far if path_so_far.count(node) > 1]
+            duplicate_lowercase_nodes = [node for node in duplicate_nodes if not node.isupper()]
+            is_any_duplicate_lowercase_nodes = len(duplicate_lowercase_nodes) != 0
+            if not is_any_duplicate_lowercase_nodes:
+                new_paths = get_paths_to_end(to_node, edges_dict, path_so_far)
+                paths.extend(new_paths)
     
     return paths
 
@@ -48,7 +57,7 @@ A-b
 b-d
 A-end
 b-end
-""") == 10
+""") == 36
 
 assert main_from_input("""
 dc-end
@@ -61,7 +70,7 @@ HN-end
 kj-sa
 kj-HN
 kj-dc
-""") == 19
+""") == 103
 
 assert main_from_input("""
 fs-end
@@ -82,7 +91,7 @@ he-WI
 zg-he
 pj-fs
 start-RW
-""") == 226
+""") == 3509
 
 if __name__ == "__main__":
     main()
