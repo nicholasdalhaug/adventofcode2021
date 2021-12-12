@@ -63,6 +63,12 @@ class EnergyMatrix:
                 value = self.energy_ints_matrix[y][x]
                 if value >= 10:
                     self.energy_ints_matrix[y][x] = 0
+    
+    def have_all_just_flashed(self) -> bool:
+        for y in range(len(self.energy_ints_matrix)):
+            for x in range(len(self.energy_ints_matrix[0])):
+                if self.energy_ints_matrix[y][x] != 0: return False
+        return True
 
 def main_from_input(content: str):
     lines = [x.strip() for x in content.strip().split("\n")]
@@ -70,11 +76,13 @@ def main_from_input(content: str):
 
     energy_matrix = EnergyMatrix(energy_ints_matrix)
 
-    for _ in range(100):
+    step_i = 0
+    while not energy_matrix.have_all_just_flashed():
+        step_i += 1
         energy_matrix.step()
     
-    print(energy_matrix.n_flashes)
-    return energy_matrix.n_flashes
+    print(step_i)
+    return step_i
 
 def main():
     with open("11/input.txt") as file:
@@ -93,7 +101,7 @@ assert main_from_input("""
 6882881134
 4846848554
 5283751526
-""") == 1656
+""") == 195
 
 if __name__ == "__main__":
     main()
