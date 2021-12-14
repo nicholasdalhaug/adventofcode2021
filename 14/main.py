@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 def main_from_input(content: str):
     polymer_template, pair_insertions_str = content.strip().split("\n\n")
     
@@ -6,31 +8,44 @@ def main_from_input(content: str):
         pair, insertion = pair_insertion_str.strip().split(" -> ")
         pair_insertions_dict[pair] = insertion
 
-    polymer = polymer_template
-    for _ in range(10):
-        polymer = insertion_step(polymer, pair_insertions_dict)
+    pairs = defaultdict(lambda: 0)
+    for p_i in range(len(polymer_template)-1):
+        pair = polymer_template[p_i:p_i+2]
+        pairs[pair] += 1
+
+    for i in range(40):
+        print(i)
+        pairs = insertion_step(pairs, pair_insertions_dict)
     
-    score = most_common_minus_least_common(polymer)
+    last = polymer_template[-1]
+    score = most_common_minus_least_common(pairs, last)
     print(score)
     return score
 
-def insertion_step(polymer, pair_insertions_dict):
-    insertions = []
+def insertion_step(pairs, pair_insertions_dict):
+    new_pairs = defaultdict(lambda: 0)
 
-    for p_i in range(len(polymer)-1):
-        pair = polymer[p_i:p_i+2]
+    for pair in pairs:
+        n_times = pairs[pair]
+
         insertion = pair_insertions_dict[pair]
-        insertions.append((insertion, p_i))
-    
-    new_polymer = polymer
-    for insertion_tuple in insertions[::-1]:
-        insertion, p_i = insertion_tuple
-        new_polymer = new_polymer[:p_i+1] + insertion + new_polymer[p_i+1:]
-    
-    return new_polymer
 
-def most_common_minus_least_common(polymer: str):
-    counts = {p: polymer.count(p) for p in set(polymer)}
+        pair_1 = pair[0] + insertion
+        pair_2 = insertion + pair[1]
+
+        new_pairs[pair_1] += n_times
+        new_pairs[pair_2] += n_times
+
+    return new_pairs
+
+def most_common_minus_least_common(pairs, last):
+    counts = defaultdict(lambda: 0)
+    for pair in pairs:
+        p = pair[0]
+        counts[p] += pairs[pair]
+    counts[last] += 1
+
+    #counts = {p: polymer.count(p) for p in set(polymer)}
     max_value = max(counts.values())
     min_value = min(counts.values())
     value = max_value - min_value
@@ -61,7 +76,7 @@ BB -> N
 BC -> B
 CC -> N
 CN -> C
-""") == 1588
+""") == 2188189693529
 
 if __name__ == "__main__":
     main()
