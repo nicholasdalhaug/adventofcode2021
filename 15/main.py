@@ -1,9 +1,12 @@
 def main_from_input(content: str):
     map_matrix = [[int(x) for x in line.strip()] for line in content.strip().split("\n")]
+    x_len = len(map_matrix[0])
+    y_len = len(map_matrix)
+    increased_map = [[(map_matrix[y%y_len][x%x_len] + x // x_len + y // y_len - 1) % 9 + 1 for x in range(5*x_len)] for y in range(5*y_len)]
 
-    path = get_shortest_path(map_matrix, (0, 0))
+    path = get_shortest_path(increased_map, (0, 0))
 
-    end = (len(map_matrix[0])-1, len(map_matrix)-1)
+    end = (len(increased_map[0])-1, len(increased_map)-1)
     risk = path[end][1]
 
     print(risk)
@@ -26,8 +29,11 @@ def get_shortest_path(map_matrix, start_coord):
             cost_to_n = cost + map_matrix[n[1]][n[0]]
             if n not in visited_nodes and (n not in nodes_to_visit or nodes_to_visit[n][1] > cost_to_n):
                 nodes_to_visit[n] = (lowest_cost_node, cost_to_n)
+                if n == (len(map_matrix[0])-1, len(map_matrix)-1):
+                    visited_nodes[n] = (lowest_cost_node, cost_to_n)
+                    return visited_nodes
 
-    return visited_nodes
+    raise Exception("We never found the end")
 
 def get_neighbours(coord, map_matrix):
     x, y = coord
@@ -55,7 +61,7 @@ assert main_from_input("""
 3125421639
 1293138521
 2311944581
-""") == 40
+""") == 315
 
 if __name__ == "__main__":
     main()
