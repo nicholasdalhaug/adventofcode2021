@@ -1,3 +1,5 @@
+import math
+
 class SubPacket:
     def __init__(self, bin_packet) -> None:
         self.bin = bin_packet
@@ -49,6 +51,29 @@ class SubPacket:
         for sub_packet in self.sub_packets:
             sum_versions += sub_packet.get_sum_version_numbers()
         return sum_versions
+    
+    def get_value(self):
+        type_id = int(self.type_id,2)
+
+        values = [p.get_value() for p in self.sub_packets]
+
+        if type_id == 4:
+            return int(self.literal,2)
+        if type_id == 0:
+            return sum(values)
+        if type_id == 1:
+            return math.prod(values)
+        if type_id == 2:
+            return min(values)
+        if type_id == 3:
+            return max(values)
+        if type_id == 5:
+            return 1 if values[0] > values[1] else 0
+        if type_id == 6:
+            return 1 if values[0] < values[1] else 0
+        if type_id == 7:
+            return 1 if values[0] == values[1] else 0
+        raise Exception(f"No such type id {type_id}")
 
 def main_from_input(content: str):
     hex_transmission_str = content.strip()
@@ -56,7 +81,7 @@ def main_from_input(content: str):
 
     packet = SubPacket(bin_transmission)
 
-    score = packet.get_sum_version_numbers()
+    score = packet.get_value()
 
     print(score)
     return score
@@ -67,30 +92,37 @@ def main():
     
     main_from_input(content)
 
-# Type id 0
-main_from_input("""
-38006F45291200
-""")
-# Type id 1
-main_from_input("""
-EE00D40C823060
-""")
+assert main_from_input("""
+C200B40A82
+""") == 3
 
 assert main_from_input("""
-8A004A801A8002F478
-""") == 16
+04005AC33890
+""") == 54
 
 assert main_from_input("""
-620080001611562C8802118E34
-""") == 12
+880086C3E88112
+""") == 7
 
 assert main_from_input("""
-C0015000016115A2E0802F182340
-""") == 23
+CE00C43D881120
+""") == 9
 
 assert main_from_input("""
-A0016C880162017C3686B18A3D4780
-""") == 31
+D8005AC2A8F0
+""") == 1
+
+assert main_from_input("""
+F600BC2D8F
+""") == 0
+
+assert main_from_input("""
+9C005AC2F8F0
+""") == 0
+
+assert main_from_input("""
+9C0141080250320F1802104A08
+""") == 1
 
 if __name__ == "__main__":
     main()
