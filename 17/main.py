@@ -71,8 +71,9 @@ def main_from_input(content: str):
     t_max_i = t_heights.index(max_y)
     t_max = trajectories[t_max_i]
     
-    print(max_y)
-    return max_y
+    score = len(trajectories)
+    print(score)
+    return score
 
 
 def main():
@@ -83,7 +84,7 @@ def main():
 
 assert main_from_input("""
 target area: x=20..30, y=-10..-5
-""") == 45
+""") == 112
 
 if __name__ == "__main__":
     main()
