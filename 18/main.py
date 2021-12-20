@@ -1,5 +1,6 @@
 from typing import Union
 import ast
+import itertools
 
 class SnailfishNumber:
     pass
@@ -162,11 +163,10 @@ def main_from_input(content: str):
     lines = content.strip().split("\n")
     sf_lists = [ast.literal_eval(line.strip()) for line in lines]
 
-    snailfish_number = SnailfishNumber(sf_lists[0])
-    for sf_list in sf_lists[1:]:
-        snailfish_number = snailfish_add(snailfish_number, sf_list)
+    possibilities = itertools.permutations(sf_lists, 2)
+    magnitudes = [snailfish_add(l1, l2).get_magnitude() for l1, l2 in possibilities]
     
-    score = snailfish_number.get_magnitude()
+    score = max(magnitudes)
     print(score)
     return score
 
@@ -188,7 +188,7 @@ assert main_from_input("""
 [[9,3],[[9,9],[6,[4,9]]]]
 [[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
 [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]
-""") == 4140
+""") == 3993
 
 if __name__ == "__main__":
     main()
