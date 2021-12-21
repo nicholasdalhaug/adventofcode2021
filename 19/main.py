@@ -113,6 +113,11 @@ def main_from_input(content: str):
     print(score)
     return score
 
+#positions = [scanner.t for scanner in scanners]
+#differences = [x-y for x, y in itertools.combinations(positions, 2)]
+#distances = [abs(d[0]) + abs(d[1]) + abs(d[2]) for d in differences]
+#max_distance = max(distances)
+
 
 def main():
     with open("19/input.txt") as file:
