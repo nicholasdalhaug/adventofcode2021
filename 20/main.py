@@ -29,11 +29,48 @@ class Image:
 
                 result_value = algorithm[dec_value]
                 result_data[y-1][x-1] = result_value
-                pass
         
         self.data = result_data
 
         self.pad(self.data[0][0])
+
+        self.ensure_3_border()
+
+    def ensure_3_border(self):
+        border_value = self.data[0][0]
+        
+        min_x = len(self.data[0])
+        min_y = len(self.data)
+        max_x = 0
+        max_y = 0
+        for y in range(len(self.data)):
+            for x in range(len(self.data[0])):
+                value = self.data[y][x]
+                if value != border_value:
+                    min_x = min(min_x, x)
+                    min_y = min(min_y, y)
+                    max_x = max(max_x, x)
+                    max_y = max(max_y, y)
+        
+        closest_distance = min(min_x, min_y, len(self.data[0])-1-max_x, len(self.data)-1-max_y)
+        # There is still a border
+        assert closest_distance >= 1
+
+        if closest_distance == 1:
+            self.pad(border_value)
+        elif closest_distance == 2:
+            self.pad(border_value)
+            self.pad(border_value)
+        elif closest_distance == 3:
+            pass
+        else:
+            for _ in range(closest_distance - 3):
+                self.remove_border()
+    
+    def remove_border(self):
+        self.data = self.data[1:-1]
+        for y in range(len(self.data)):
+            self.data[y] = self.data[y][1:-1]
 
     def count_light(self):
         count = 0
@@ -48,8 +85,8 @@ def main_from_input(content: str):
     algorithm, image_str = content.strip().split("\n\n")
 
     image = Image(image_str)
-    image.enhance(algorithm)
-    image.enhance(algorithm)
+    for _ in range(50):
+        image.enhance(algorithm)
 
     score = image.count_light()
     print(score)
@@ -70,7 +107,7 @@ assert main_from_input("""
 ##..#
 ..#..
 ..###
-""") == 35
+""") == 3351
 
 if __name__ == "__main__":
     main()
