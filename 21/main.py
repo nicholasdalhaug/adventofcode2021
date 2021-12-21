@@ -1,64 +1,38 @@
-from dataclasses import dataclass
-
-@dataclass
-class Player:
-    position: int
-    score: int = 0
-
-class DiracDice:
-    p1: Player
-    p2: Player
-
-    n_dice_rolls = 0
-    n_dice_sides = 100
-    n_spaces = 10
-
-    def __init__(self, p1_start, p2_start) -> None:
-        self.p1 = Player(p1_start)
-        self.p2 = Player(p2_start)
-
-    def play(self):
-        while True:
-            dice_rolls = [self.get_dice_roll() for _ in range(3)]
-            p1_rolls_sum = sum(dice_rolls)
-            p1_new_loc = (self.p1.position + p1_rolls_sum - 1) % self.n_spaces + 1
-            self.p1.score += p1_new_loc
-            self.p1.position = p1_new_loc
-            if self.p1.score >= 1000:
-                return
-            
-            dice_rolls = [self.get_dice_roll() for _ in range(3)]
-            p2_rolls_sum = sum(dice_rolls)
-            p2_new_loc = (self.p2.position + p2_rolls_sum - 1) % self.n_spaces + 1
-            self.p2.score += p2_new_loc
-            self.p2.position = p2_new_loc
-            if self.p2.score >= 1000:
-                return
-            
-            pass
-
-    def get_dice_roll(self):
-        dice_value = (self.n_dice_rolls + 1 - 1) % self.n_dice_sides + 1
-        self.n_dice_rolls += 1
-        return dice_value
-
-    def get_score(self):
-        lose_points = min(self.p1.score, self.p2.score)
-        game_score = lose_points * self.n_dice_rolls
-        return game_score
-
+import itertools
+from functools import cache
 
 def main_from_input(content: str):
     p1_str, p2_str = content.strip().split("\n")
     p1_start = int(p1_str.strip()[-1])
     p2_start = int(p2_str.strip()[-1])
 
-    game = DiracDice(p1_start, p2_start)
-    game.play()
-
-    score = game.get_score()
+    counts = count_wins(p1_start, p2_start, 0, 0, 1)
+    
+    score = max(counts)
     print(score)
     return score
+
+@cache
+def count_wins(p1_pos, p2_pos, p1_score, p2_score, whose_turn):
+    if p1_score >= 21:
+        return (1, 0)
+    if p2_score >= 21:
+        return (0, 1)
+    
+    dice_sum_values = [sum(d) for d in itertools.product([1, 2, 3], repeat=3)]
+    if whose_turn == 1:
+        p1_locs = [(p1_pos + d - 1) % 10 + 1 for d in dice_sum_values]
+        p1_scores = [p1_score + p1_loc for p1_loc in p1_locs]
+        cs = [count_wins(p1_locs[i], p2_pos, p1_scores[i], p2_score, 2) for i in range(len(dice_sum_values))]
+    else:
+        p2_locs = [(p2_pos + d - 1) % 10 + 1 for d in dice_sum_values]
+        p2_scores = [p2_score + p2_loc for p2_loc in p2_locs]
+        cs = [count_wins(p1_pos, p2_locs[i], p1_score, p2_scores[i], 1) for i in range(len(dice_sum_values))]
+
+    c1 = sum([c[0] for c in cs])
+    c2 = sum([c[1] for c in cs])
+    count = (c1, c2)
+    return count
 
 def main():
     with open("21/input.txt") as file:
@@ -69,7 +43,7 @@ def main():
 assert main_from_input("""
 Player 1 starting position: 4
 Player 2 starting position: 8
-""") == 739785
+""") == 444356092776315
 
 if __name__ == "__main__":
     main()
