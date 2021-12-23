@@ -37,10 +37,11 @@ def get_possible_moves_maps_and_costs(amphimap_list, mover_coord):
     x, y = mover_coord
 
     possible_moves_maps_and_costs = []
-    if y == 2 or y == 3:
+    if y == 2 or y == 3 or y == 4 or y == 5:
         maps_and_costs = get_maps_and_costs_hallway(amphimap_list, mover_coord)
         possible_moves_maps_and_costs.extend(maps_and_costs)
     else:
+        assert y == 1
         maps_and_costs = get_maps_and_costs_home(amphimap_list, mover_coord)
         possible_moves_maps_and_costs.extend(maps_and_costs)
     return possible_moves_maps_and_costs
@@ -63,12 +64,22 @@ def get_maps_and_costs_home(map_list, from_coord):
             tile_below = map_list[2][home_x]
             if tile_below == ".":
                 tile_2_below = map_list[3][home_x]
+                tile_3_below = map_list[4][home_x]
+                tile_4_below = map_list[5][home_x]
                 if tile_2_below == ".":
-                    map_and_cost = get_map_and_cost_after_move(map_list, from_coord, (home_x, 3))
-                    possible_moves_maps_and_costs.append(map_and_cost)
-                elif tile_2_below == mover_name:
+                    if tile_3_below == ".":
+                        if tile_4_below == ".":
+                            map_and_cost = get_map_and_cost_after_move(map_list, from_coord, (home_x, 5))
+                            possible_moves_maps_and_costs.append(map_and_cost)
+                        elif tile_4_below == mover_name:
+                            map_and_cost = get_map_and_cost_after_move(map_list, from_coord, (home_x, 4))
+                            possible_moves_maps_and_costs.append(map_and_cost)
+                    elif tile_3_below == mover_name and tile_4_below == mover_name:
+                        map_and_cost = get_map_and_cost_after_move(map_list, from_coord, (home_x, 3))
+                        possible_moves_maps_and_costs.append(map_and_cost)
+                elif tile_2_below == mover_name and tile_3_below == mover_name and tile_4_below == mover_name:
                     map_and_cost = get_map_and_cost_after_move(map_list, from_coord, (home_x, 2))
-                    possible_moves_maps_and_costs.append(map_and_cost)
+                    possible_moves_maps_and_costs.append(map_and_cost) 
             break
 
         next_x += dir
@@ -83,9 +94,17 @@ def get_maps_and_costs_hallway(map_list, from_coord):
     mover_name = map_list[y][x]
     home_x = get_home_x(mover_name)
 
-    if y == 3 and x == home_x:
+    if y == 5 and x == home_x:
         return []
-    if y == 2 and x == home_x and map_list[3][home_x] == mover_name:
+    if y == 4 and x == home_x and map_list[5][home_x] == mover_name:
+        return []
+    if y == 3 and x == home_x  and map_list[4][home_x] == mover_name and map_list[5][home_x] == mover_name:
+        return []
+    if y == 2 and x == home_x and map_list[3][home_x] == mover_name and map_list[4][home_x] == mover_name and map_list[5][home_x] == mover_name:
+        return []
+    if y  == 5 and map_list[4][x] != ".":
+        return []
+    if y  == 4 and map_list[3][x] != ".":
         return []
     if y  == 3 and map_list[2][x] != ".":
         return []
@@ -164,6 +183,12 @@ def get_mover_cost(mover_name: str) -> int:
 def main_from_input(content: str):
     amphimap = content.strip()
 
+    map_lines = amphimap.split("\n")
+    map_lines.insert(3, "  #D#C#B#A#")
+    map_lines.insert(4, "  #D#B#A#C#")
+
+    amphimap = get_map_after_move(map_lines, (3,2), (3,2))
+
     map_path, score = get_lowest_map_path_with_cost(amphimap)
 
     print()
@@ -184,32 +209,34 @@ WIN_MAP = """#############
 #...........#
 ###A#B#C#D###
   #A#B#C#D#
+  #A#B#C#D#
+  #A#B#C#D#
   #########"""
 
-assert main_from_input("""
-#############
-#.........A.#
-###.#B#C#D###
-  #A#B#C#D#
-  #########
-""") == 8
+# assert main_from_input("""
+# #############
+# #.........A.#
+# ###.#B#C#D###
+#   #A#B#C#D#
+#   #########
+# """) == 8
 
-assert main_from_input("""
-#############
-#...........#
-###A#B#C#D###
-  #A#B#C#D#
-  #########
-""") == 0
+# assert main_from_input("""
+# #############
+# #...........#
+# ###A#B#C#D###
+#   #A#B#C#D#
+#   #########
+# """) == 0
 
-# Useful
-assert main_from_input("""
-#############
-#.A.........#
-###.#B#C#D###
-  #A#B#C#D#
-  #########
-""") == 2
+# # Useful
+# assert main_from_input("""
+# #############
+# #.A.........#
+# ###.#B#C#D###
+#   #A#B#C#D#
+#   #########
+# """) == 2
 
 assert main_from_input("""
 #############
@@ -217,7 +244,7 @@ assert main_from_input("""
 ###B#C#B#D###
   #A#D#C#A#
   #########
-""") == 12521
+""") == 44169
 
 if __name__ == "__main__":
     main()
