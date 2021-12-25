@@ -257,6 +257,7 @@ def main_from_input(content: str):
                 if next_z_state in possible_next_function_states:
                     earlier_path = possible_next_function_states[next_z_state]
                     new_possible_path = next_digits_used
+                    # Smallest found when reversing this
                     possible_next_function_states[next_z_state] = [int(x) for x in str(max(int("".join([str(x) for x in earlier_path])), int("".join([str(x) for x in new_possible_path]))))]
                 else:
                     possible_next_function_states[next_z_state] = next_digits_used
