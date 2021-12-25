@@ -1,0 +1,257 @@
+inp w       (i0, s1, s2, s3)
+mul x 0     (i0, 0, s2, s3)
+add x z     (i0, s3, s2, s3)
+mod x 26    (i0, s3 % 26, s2, s3)
+div z 1
+add x 14    (i0, (s3%26)+14, s2, s3)
+eql x w     (i0, 0, s2, s3)
+eql x 0     (i0, 1, s2, s3)
+mul y 0     (i0, 1, 0, s3)
+add y 25    (i0, 1, 25, s3)
+mul y x     (i0, 1, 0, s3)
+add y 1     (i0, 1, 1, s3)
+mul z y     (i0, 1, 1, s3)
+mul y 0     (i0, 1, 0, s3)
+add y w     (i0, 1, i0, s3)
+add y 8     (i0, 1, i0+8, s3)
+mul y x     (i0, 1, i0+8, s3)
+add z y     (i0, 1, i0+8, s3+i0+8)
+
+inp w       (i1, s1, s2, s3)
+mul x 0     (i1, 0, s2, s3)
+add x z     (i1, s3, s2, s3)
+mod x 26    (i1, s3+26, s2, s3)
+div z 1     (i1, s3+26, s2, s3)
+add x 15    (i1, s3+26+15, s2, s3)
+eql x w     (i1, 0, s2, s3)
+eql x 0     (i1, 1, s2, s3)
+mul y 0     (i1, 1, 0, s3)
+add y 25    (i1, 1, 25, s3)
+mul y x     (i1, 1, 25, s3)
+add y 1     (i1, 1, 26, s3)
+mul z y     (i1, 1, 26, s3*26)
+mul y 0     (i1, 1, 0, s3*26)
+add y w     (i1, 1, i1, s3*26)
+add y 11    (i1, 1, i1+11, s3*26)
+mul y x     (i1, 1, i1+11, s3*26)
+add z y     (i1, 1, i1+11, s3*26+i1+11)
+
+inp w       (i2, s1, s2, s3)
+mul x 0     (i2, 0, s2, s3)
+add x z     (i2, s3, s2, s3)
+mod x 26    (i2, s3%26, s2, s3)
+div z 1     (i2, s3%26, s2, s3)
+add x 13    (i2, (s3%26)+13, s2, s3)
+eql x w     (i2, 0, s2, s3)
+eql x 0     (i2, 1, s2, s3)
+mul y 0     (i2, 1, 0, s3)
+add y 25    (i2, 1, 25, s3)
+mul y x     (i2, 1, 25, s3)
+add y 1     (i2, 1, 26, s3)
+mul z y     (i2, 1, 26, s3*26)
+mul y 0     (i2, 1, 0, s3*26)
+add y w     (i2, 1, i2, s3*26)
+add y 2     (i2, 1, i2+2, s3*26)
+mul y x     (i2, 1, i2+2, s3*26)
+add z y     (i2, 1, i2+2, s3*26+i2+2)
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -10
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -3
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 5
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 10
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 12
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 12
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -6
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 9
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -6
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -2
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+
+inp w       (i13, s1, s2, s3)
+mul x 0     (i13, 0, s2, s3)
+add x z     (i13, s3, s2, s3)
+mod x 26    (i13, s3%26, s2, s3)
+div z 26    (i13, s3%26, s2, s3//26)
+add x -9    (i13, (s3%26)-9, s2, s3//26)
+eql x w     (i13, (s3%26)-9 == i13, s2, s3//26) er (i13, 1, s2, s3//26) når s3 er mellom 10 og 18 og (i13, 0, s2, s3//26) ellers
+eql x 0                                            (i13, 0, s2, s3//26) når s3 er mellom 10 og 18 og (i13, 1, s2, s3//26)
+mul y 0                                            (i13, 0, 0, s3//26) når s3 er mellom 10 og 18 og (i13, 1, 0, s3//26)
+add y 25                                           (i13, 0, 25, s3//26) når s3 er mellom 10 og 18 og (i13, 1, 25, s3//26)
+mul y x                                            (i13, 0, 0, s3//26) når s3 er mellom 10 og 18 og (i13, 1, 25, s3//26)
+add y 1                                            (i13, 0, 1, s3//26) når s3 er mellom 10 og 18 og (i13, 1, 26, s3//26)
+mul z y                                            (i13, 0, 1, s3//26) når s3 er mellom 10 og 18 og (i13, 1, 26, (s3//26)*26)
+mul y 0                                            (i13, 0, 0, s3//26) når s3 er mellom 10 og 18 og (i13, 1, 0, (s3//26)*26)
+add y w                                            (i13, 0, i3, s3//26) når s3 er mellom 10 og 18 og (i13, 1, i3, (s3//26)*26)
+add y 2                                            (i13, 0, i3+2, s3//26) når s3 er mellom 10 og 18 og (i13, 1, i3+2, (s3//26)*26)
+mul y x                                            (i13, 0, 0, s3//26) når s3 er mellom 10 og 18 og (i13, 1, i3+2, (s3//26)*26)
+add z y                                            (i13, 0, 0, s3//26) når s3 er mellom 10 og 18 og (i13, 1, i3+2, (s3//26)*26+i3+2)
